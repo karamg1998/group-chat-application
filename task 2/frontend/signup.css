@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: rgb(112, 224, 112);
+}
+.toast{
+    background-color: rgb(226, 29, 29);
+    border-radius: 5px;
+    color: white;
+    font-size: 20px;
+    padding: 2rem;
+    margin: 1rem;
+   }
+  
+.popup{
+   position: fixed;
+   right: 10px;
+   bottom: 10px;
+  }
