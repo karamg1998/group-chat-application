@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funchat</title>
+    <link rel="stylesheet" href="./user.css">
+</head>
+<body>
+    <div class="popup">
+
+    </div>
+    <section class="initial">
+        <header class="funchat">
+        <h1 class="header">☖Funchat</h1>
+        <h2 class="user"></h2>
+        <button class="logout">logout</button>
+        </header><br><br><br><br>
+        <div class="contnr">
+        <button id="a-user">Users</button>
+        <button id="group">Group</button>
+        </div><br>
+        <section class="user-container">
+        </section>
+    </section>
+    <section class="chat"> 
+        <div class="inline">
+        <button id=allchats>↩</button><br>
+        <h2 class="sec-user"></h2>
+        </div><br><br><br>
+        <div class="c-section"> 
+        </div>
+        <br><br><br>
+        <form class="chat-form">
+            <input type="text" id="messg" name="messg">
+            <button id="snd-mssg">Send</button>
+        </form>
+    </section>
+    <script src="chat.js" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.js" ></script>
+</body>
+</html>
