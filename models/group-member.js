@@ -8,6 +8,18 @@ const groupMember=sequelize.define('groupMember',{
         allowNull: false,
         primaryKey: true
     },
+    admin:{
+        type:Sequelize.STRING,
+        allowNull:false
+    },
+   groupName:{
+        type:Sequelize.STRING,
+        allowNull:false
+    },
+    userName:{
+        type:Sequelize.STRING,
+        allowNull:false
+    }
 });
 
 module.exports=groupMember;

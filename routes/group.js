@@ -10,6 +10,10 @@ router.post('/group/addM',groupMessageController.addM);
 router.get('/group/getM',groupMessageController.getM);
 router.get('/group/memN',groupController.getAllm);
 router.get('/group/member',groupController.del);
+router.get('/group/leave',groupController.leave);
+router.get('/group/admin',groupController.Admin);
+router.get('/group/Radmin',groupController.remAdmin);
 router.delete('/group/del/:name',groupController.delG);
+
 
 module.exports=router;

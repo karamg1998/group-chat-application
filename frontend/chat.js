@@ -15,6 +15,7 @@ let f=document.querySelector('.a-parti');
 let aM=document.querySelector('.m-con');
 let delGroup=document.getElementById('delGroup');
 let a=document.getElementById('amem');
+let b=document.getElementById('leave');
 var messg,dom,dom2,gMessg;
 
 
@@ -82,7 +83,7 @@ function gInter(data)
 {
    for(var i=0;i<data.length;i++)
     {
-    Gcon.innerHTML+=`<button class='group-names' id=${data[i].admin}>${data[i].name[0].toUpperCase()+data[i].name.slice(1)}</button><br><br>`
+    Gcon.innerHTML+=`<button class='group-names' id=${data[i].admin}>${data[i].name}</button><br><br>`
     }
    let gr=document.getElementsByClassName('group-names');
    gNext(gr);
@@ -100,7 +101,7 @@ function gNext(data)
             let gName=document.querySelector('.g-name');
             let gro=e.target.innerText;
             gName.innerText=gro;
-            if(e.target.id==='true')
+            if(e.target.id==='true'||'true(su)')
             {
                  delGroup.classList.toggle('active');
                  f.classList.toggle('active');
@@ -108,6 +109,7 @@ function gNext(data)
             }
             else{
                 a.classList.toggle('active');
+                b.classList.toggle('active');
             }
             Gchat.innerHTML='';
             groInt(gro);
@@ -155,7 +157,7 @@ function inter()
         u.innerHTML='';
         show(res.data.obj);
         var main=document.querySelector('.user');
-        main.innerText=`Hello ${res.data.logger[0].toUpperCase()+res.data.logger.slice(1)}`;
+        main.innerText=`Hello ${res.data.logger}`;
      });
     }
     catch(err)
@@ -178,7 +180,7 @@ function show(data)
 {
     for(var i=0;i<data.length;i++)
     {
-        u.innerHTML+=`<button class='users'>${data[i].name[0].toUpperCase()+data[i].name.slice(1)}</button><br><br>`
+        u.innerHTML+=`<button class='users'>${data[i].name}</button><br><br>`
     }
     let user=document.getElementsByClassName('users');
     s(user)
@@ -194,7 +196,7 @@ function s(user)
             chat.classList.toggle('active');
             UserContainr.classList.remove('active');
             initial.classList.toggle('active');
-            let n=e.target.innerText[0].toLowerCase()+e.target.innerText.slice(1);
+            let n=e.target.innerText;
                 try{
                     await axios.get('http://localhost:3000/user/chats',{headers:{'token':token,'secondUser':n}})
                     .then(res=>{
@@ -304,43 +306,61 @@ create.addEventListener('click',(e)=>{
 })
 
 let gBack=document.getElementById('g-allchats');
-gBack.addEventListener('click',(e)=>{
+gBack.addEventListener('click',gB)
+
+function gB(e)
+{
     clearInterval(gMessg);
     a.classList.remove('active');
+    b.classList.remove('active');
     delGroup.classList.remove('active');
     gChat.classList.remove('active');
     GroupContainr.classList.remove('active');
     initial.classList.remove('active');
     f.classList.remove('active');
     Group();
-})
+}
 
 let addP=document.getElementById('add-participants');
-addP.addEventListener('click',(e)=>{
+addP.addEventListener('click',async (e)=>{
     e.preventDefault();
     let gName=document.querySelector('.g-name').innerText;
     let par=document.getElementById('p-number').value;
     let obj={gName,par};
-    axios.post('http://localhost:3000/group/addp',obj).then(res=>{
+    try{
+       await axios.post('http://localhost:3000/group/addp',obj).then(res=>{
         console.log(res.data);
         popup(res.data.message);
     })
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+    
 })
 
 let gmessge=document.getElementById('g-snd-mssg');
-gmessge.addEventListener('click',(e)=>{
+gmessge.addEventListener('click',async (e)=>{
     e.preventDefault();
     let gm=document.getElementById('g-messg').value;
     let gName=document.querySelector('.g-name').innerText;
     let obj={gm,gName,token};
-    axios.post('http://localhost:3000/group/addM',obj)
-    .then(r=>{
+    try{
+       await axios.post('http://localhost:3000/group/addM',obj)
+       .then(r=>{
         console.log(r.data);
         var m=document.getElementById('g-messg');
             m.value='';
             Gchat.innerHTML+=`<ul class="log">${gm}</ul>
                               <br><ul class="log-1">you</ul><br><br>`;
     })
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+    
 })
 
 function popup(data)
@@ -366,7 +386,7 @@ aParticipants.addEventListener('click',async (e)=>{
    aMem.classList.toggle('active');
    gChat.classList.remove('active');
    f.classList.remove('active');
-   let gN=f.id[0].toLowerCase()+f.id.slice(1);
+   let gN=f.id;
    try{
     await axios.get('http://localhost:3000/group/memN',{headers:{'token':token,'group':gN}})
     .then(res=>{
@@ -384,18 +404,74 @@ function allMembers(data)
 {
     for(var i=0;i<data.length;i++)
     {
+        if(data[i].admin=='true(su)')
+        {
+            aM.innerHTML+=`<ul class="member">${data[i].name} (SUPER ADMIN)</ul><hr><br>`
+        }
         if(data[i].admin==='true')
         {
-            aM.innerHTML+=`<ul class="member">${data[i].name}</ul><hr><br>`
+            aM.innerHTML+=`<ul class="member">${data[i].name} (ADMIN) <button id=${data[i].id} class="rema">Remove Admin</button></ul><hr><br>`
         }
-        else{
-            aM.innerHTML+=`<ul class="member">${data[i].name}<button id=${data[i].id} class="rem">Remove</button></ul><hr><br>`
+        if(data[i].admin==='false')
+        {
+            aM.innerHTML+=`<ul class="member">${data[i].name}<button id=${data[i].id} class="rem">Remove</button><button id=${data[i].id} class="madmin">Make Admin</button></ul><hr><br>`
         }
         
     }
+   let rema=document.getElementsByClassName('rema');
+    remAdmin(rema); 
 
     let rem=document.getElementsByClassName('rem');
     remove(rem);
+
+    let mad=document.getElementsByClassName('madmin');
+    MakeAd(mad);
+}
+
+
+
+function remAdmin(data)
+{
+    for(var i=0;i<data.length;i++)
+    {
+     data[i].addEventListener('click',async (e)=>{
+         try{
+             await axios.get(`http://localhost:3000/group/Radmin`,{headers:{'id':e.target.id,'group':n.innerText,'token':token}})
+             .then(res=>{
+                 console.log(res.data);
+                 popup('admin removed');
+                 e.target.parentElement.innerHTML=`${res.data.name}<button id=${res.data.id} class="rem">Remove</button><button id=${res.data.id} class="madmin">Make Admin</button>`
+             })
+         }
+         catch(err)
+         {
+             console.log(err);
+         }
+     })
+    }
+
+}
+
+function MakeAd(data)
+{
+    for(var i=0;i<data.length;i++)
+    {
+     data[i].addEventListener('click',async (e)=>{
+         try{
+             await axios.get(`http://localhost:3000/group/admin`,{headers:{'id':e.target.id,'group':n.innerText,'token':token}})
+             .then(res=>{
+                 console.log(res.data);
+                 popup(res.data.message);
+                 e.target.parentElement.innerHTML=`${res.data.name}(ADMIN)<button id=${res.data.id} class="rema">Remove Admin</button>`
+             })
+         }
+         catch(err)
+         {
+             console.log(err);
+         }
+     })
+    }
+    
 }
 
 function remove(rem)
@@ -437,7 +513,7 @@ a.addEventListener('click',async (e)=>{
     gChat.classList.remove('active');
     clearInterval(gMessg);
     nn1.textContent=n1.textContent;
-    let gN=nn1.innerText[0].toLowerCase()+nn1.innerText.slice(1);
+    let gN=nn1.innerText;
     try{
         await axios.get('http://localhost:3000/group/memN',{headers:{'token':token,'group':gN}})
         .then(res=>{
@@ -486,3 +562,18 @@ delGroup.addEventListener('click',async(e)=>{
         console.log(err);
     }
 })
+
+b.addEventListener('click',async(e)=>{
+    try{
+        await axios.get(`http://localhost:3000/group/leave`,{headers:{'token':token,'group':n1.innerText}})
+        .then(res=>{
+            console.log(res.data);
+            popup(res.data.message);
+            gB();
+        })
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+});
